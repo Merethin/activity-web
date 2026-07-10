@@ -130,7 +130,7 @@ impl CategoryConstraint {
                     qb.push(" = ANY(data");
                     if let Some(start) = op.start {
                         qb.push("[");
-                        qb.push_bind(start);
+                        qb.push_bind(start + 1);
                         qb.push(":]");
                     }
                     qb.push(")");

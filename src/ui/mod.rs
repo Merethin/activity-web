@@ -17,17 +17,17 @@ impl UIParameters {
                     UIItem::new("rsadopt", "General Assembly Resolution Adopted", Some(RSADOPT_EXT)),
                 ]),
                 UIGroup::new("Changes", vec![
-                    UIItem::new("chclass", "Classification Changed", None),
-                    UIItem::new("chcensus", "Census Rank Updated", None),
-                    UIItem::new("chfield", "Custom Field Updated", None),
+                    UIItem::new("chclass", "Classification Changed", Some(CHCLASS_EXT)),
+                    UIItem::new("chcensus", "Census Rank Updated", Some(CHCENSUS_EXT)),
+                    UIItem::new("chfield", "Custom Field Updated", Some(CHFIELD_EXT)),
                     UIItem::new("chflag", "Nation Flag Changed", None),
                     UIItem::new("nbanner", "Nation Banner Uploaded", None),
                     UIItem::new("chbanner", "Nation Banner Changed", None),
-                    UIItem::new("chinf", "Nation Influence Changed", None),
+                    UIItem::new("chinf", "Nation Influence Changed", Some(CHINF_EXT)),
                     UIItem::new("rvfield", "Custom Field Deleted", None),
                 ]),
                 UIGroup::new("Dispatches", vec![
-                    UIItem::new("dispatch", "New Dispatch", None),
+                    UIItem::new("dispatch", "New Dispatch", Some(DISPATCH_EXT)),
                 ]),
                 UIGroup::new("RMB", vec![
                     UIItem::new("rmbpost", "New RMB Post", None),
