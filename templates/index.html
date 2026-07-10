@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dim">
+<head>
+  <meta charset="UTF-8">
+  <title>Happenings Archive Search</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5.1.25/daisyui.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5.1.25/themes.min.css" rel="stylesheet">
+  <style>
+      .constraint-box {
+        display: none;
+        margin-left: 1.75rem;
+        margin-top: .5rem;
+        padding: .75rem;
+        border-left: 3px solid var(--color-primary);
+        background: var(--fallback-b2);
+      }
+
+      .category-box input[type="checkbox"]:checked ~ .constraint-box {
+        display: block;
+      }
+  </style>
+</head>
+<body>
+  <div class="tabs tabs-lift">
+    <input type="radio" name="outer-tab" class="tab" id="time-tab" aria-label="History Search" checked />
+    <div class="tab-content bg-base-100 border-base-300 p-6" id="time-content">
+      <label>Sort by: <select id="direction-select">
+        <option value="desc">Newest first</option>
+        <option value="asc">Oldest first</option>
+      </select></label><br><br>
+
+      <fieldset class="fieldset">
+        <label class="label">Only match happenings <div id="anchor-mode">before</div> time:</label>
+        <input id="anchor-time" type="datetime-local">
+      </fieldset>
+
+      <br><button class="btn btn-warning" id="reset-time">Reset Time</button>
+
+      <br><button id="search" class="btn btn-primary btn-lg mt-8 query-element">Search Happenings</button><br>
+    </div>
+
+    <input type="radio" name="outer-tab" class="tab" id="live-tab" aria-label="Live View" />
+    <div class="tab-content bg-base-100 border-base-300 p-6" id="live-content">
+      <button id="live" class="btn btn-primary btn-lg query-element">View Live Happenings</button><br>
+    </div>
+
+    <input type="radio" name="outer-tab" class="tab" id="nation-tab" aria-label="Nations" />
+    <div class="tab-content bg-base-100 border-base-300 p-6" id="nation-content">
+      <fieldset class="fieldset">
+        <label class="label">Match any happening referring to a nation</label>
+        <input id="nation-select" type="text" class="input" placeholder="Enter comma-separated list..." />
+
+        <label class="label">Match only when the nation <i>performs</i> an action, i.e. endorsing someone</label>
+        <input id="actor-select" type="text" class="input" placeholder="Enter comma-separated list..." />
+
+        <label class="label">Match only when the nation <i>receives</i> an action, i.e. getting endorsed</label>
+        <input id="receptor-select" type="text" class="input" placeholder="Enter comma-separated list..." />
+      </fieldset>
+
+      <br><button class="btn btn-warning" id="reset-nation">Reset Nations</button>
+    </div>
+
+    <input type="radio" name="outer-tab" class="tab" id="region-tab" aria-label="Regions" />
+    <div class="tab-content bg-base-100 border-base-300 p-6" id="region-content">
+      <fieldset class="fieldset">
+        <label class="label">Match any happening referring to a region</label>
+        <input id="region-select" type="text" class="input" placeholder="Enter comma-separated list..." />
+
+        <label class="label">Match only when the region is the origin of an action</label>
+        <input id="origin-select" type="text" class="input" placeholder="Enter comma-separated list..." />
+
+        <label class="label">Match only when the region receives an action (i.e. embassy request, move to region)</label>
+        <input id="destination-select" type="text" class="input" placeholder="Enter comma-separated list..." />
+      </fieldset>
+
+      <br><button class="btn btn-warning" id="reset-region">Reset Regions</button>
+    </div>
+
+    <input type="radio" name="outer-tab" class="tab" id="category-tab" aria-label="Categories" />
+    <div class="tab-content bg-base-100 border-base-300 p-6" id="category-content">
+      <h3 id="category-count" class="font-bold text-primary px-2">Categories Selected: All</h3><br>
+      <div class="tabs tabs-box">
+        {%- for group in activity_groups %}
+        <input type="radio" name="inner-tab" class="tab" aria-label="{{ group.label }}" />
+        <div class="tab-content bg-base-100 border-base-300 p-6 category-box">
+        {%- for item in group.items %}
+        <label><input type="checkbox" data-event="{{ item.event }}"> {{ item.label }}{% if item.ext %}<div class="constraint-box">{{ item.ext|safe }}</div>{% endif %}</label><br>
+        {% endfor -%}
+        </div>
+        {% endfor -%}
+      </div>
+
+      <br><button class="btn btn-warning" id="reset-category">Reset Categories</button>
+    </div><br>
+  </div>
+
+  <div class="flex flex-col justify-center items-center">
+    <div id="live-status" class="mt-8 mx-16 text-red-600" style="display: none;"><p>🔴 Showing Live Happenings</p></div>
+    <div id="results" class="my-8 mx-16"></div>
+    <button id="load-more" class="btn btn-outline mb-4 query-element" style="display: none;">Load more...</button>
+    <button id="export" class="btn btn-secondary mb-8 query-element" style="display: none;">Export Results as JSON</button>
+  </div>
+
+  <script src="/js/format.js"></script>
+  <script src="/js/ext.js"></script>
+  <script src="/js/load.js"></script>
+  <script src="/js/ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+pub const LAW_EXT: &'static str = r#"<label>Effect line (partial match): <input type="text" id="law-ext-line" class="ext-text"></label>"#;
+pub const RSADOPT_EXT: &'static str = r#"<label>Resolution name (partial match): <input type="text" id="rsadopt-ext-name" class="ext-text"></label>"#;
