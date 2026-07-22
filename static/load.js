@@ -106,7 +106,7 @@ async function search() {
 
     if(res.status != 200) {
         alert(`Error: ${res.statusText}\nTry again in a few seconds.`);
-        document.getElementById("search").innerText = "Search Happenings";
+        document.getElementById("search").innerText = "Search";
         Array.from(document.querySelectorAll(".query-element")).forEach((e) => e.classList.remove("btn-disabled"));
         return;
     }
@@ -130,7 +130,7 @@ async function search() {
         document.getElementById("export").style.display = "none";
     }
 
-    document.getElementById("search").innerText = "Search Happenings";
+    document.getElementById("search").innerText = "Search";
     Array.from(document.querySelectorAll(".query-element")).forEach((e) => e.classList.remove("btn-disabled"));
 }
 
@@ -141,7 +141,7 @@ async function live() {
     query = params;
 
     Array.from(document.querySelectorAll(".query-element")).forEach((e) => e.classList.add("btn-disabled"));
-    document.getElementById("live").innerText = "Loading...";
+    document.getElementById("search").innerText = "Loading...";
 
     if (evtSource) evtSource.close();
     document.getElementById("live-status").style.display = "none";
@@ -151,7 +151,7 @@ async function live() {
     container.innerHTML = "";
 
     evtSource.onopen = (event) => {
-        document.getElementById("live").innerText = "View Live Happenings";
+        document.getElementById("search").innerText = "Start";
         Array.from(document.querySelectorAll(".query-element")).forEach((e) => e.classList.remove("btn-disabled"));
 
         document.getElementById("load-more").style.display = "block";
@@ -222,7 +222,13 @@ function export_data() {
     window.open(objectUrl);
 }
 
-document.getElementById("search").onclick = search;
-document.getElementById("live").onclick = live;
+document.getElementById("search").onclick = () => {
+    if(document.getElementById("live-toggle").checked) {
+        live();
+    } else {
+        search();
+    }
+}
+
 document.getElementById("load-more").onclick = load;
 document.getElementById("export").onclick = export_data;

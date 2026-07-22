@@ -334,6 +334,7 @@ function formatEventLine(event) {
         case "rsvtopic": return `${nation(event.actor)} updated a forum topic link for the at-vote WA resolution in council ${event.data[0]}`;
         case "rsptopic": return `${nation(event.actor)} updated a forum topic link for the WA proposal ${event.data[0]}`;
         case "rsadopt": return `${nation(event.actor)} adopted General Assembly Resolution #${event.data[0]} "${resolution(event.data[0], event.data[1], "General Assembly", event.time)}"`;
+        case "rscomply": return `${nation(event.actor)} passed an omnibus bill to adopt all General Assembly resolutions`;
         case "unknown": return `Unknown happening: "${event.data[0]}"`;
         case "skipped": return `Skipped happening: "${event.data[0]}"`;
         default: return "Unknown event";

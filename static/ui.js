@@ -41,9 +41,19 @@ function updateCategoryDisplay() {
 
 function updateTimeDisplay() {
     if(document.getElementById("direction-select").value == "desc") {
-        document.getElementById("anchor-mode").innerText = "before";
+        document.getElementById("anchor-mode").innerText = "Only match happenings before:";
     } else {
-        document.getElementById("anchor-mode").innerText = "after";
+        document.getElementById("anchor-mode").innerText = "Only match happenings after:";
+    }
+}
+
+function updateLiveStatus() {
+    if(document.getElementById("live-toggle").checked) {
+        document.getElementById("history-settings").classList.add("hidden");
+        document.getElementById("search").innerText = "Start";
+    } else {
+        document.getElementById("history-settings").classList.remove("hidden");
+        document.getElementById("search").innerText = "Search";
     }
 }
 
@@ -79,7 +89,12 @@ document.getElementById("direction-select").onchange = function(e) {
     updateTimeDisplay();
 }
 
+document.getElementById("live-toggle").onchange = function(e) {
+    updateLiveStatus();
+}
+
 updateNationDisplay();
 updateRegionDisplay();
 updateCategoryDisplay();
 updateTimeDisplay();
+updateLiveStatus();
