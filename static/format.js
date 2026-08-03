@@ -348,17 +348,21 @@ function formatEventLine(event) {
 function formatEvent(event) {
     let container = document.createElement("div");
 
+    let wrapper = document.createElement("div");
+    wrapper.classList.add("join", "mx-2");
+    container.appendChild(wrapper);
+
     let id = document.createElement("div");
     id.innerText = `${event.event}`;
-    id.classList.add("badge", "badge-outline", "badge-secondary");
-    container.appendChild(id);
+    id.classList.add("badge", "badge-outline", "badge-secondary", "join-item");
+    wrapper.appendChild(id);
 
     let time = document.createElement("time");
     const date = new Date(event.time * 1000);
     time.dataset.epoch = Math.floor(date.getTime() / 1000).toString();
     time.innerText = date.toLocaleString("en-GB", {});
-    time.classList.add("badge", "badge-outline", "badge-info", "mx-2");
-    container.appendChild(time);
+    time.classList.add("badge", "badge-outline", "badge-info", "join-item");
+    wrapper.appendChild(time);
 
     let line = formatEventLine(event);
     let span = document.createElement("span");
