@@ -15,6 +15,7 @@ impl UIParameters {
                 UIGroup::new("Laws", vec![
                     UIItem::new("law", "Legislation Passed", Some(LAW_EXT)),
                     UIItem::new("rsadopt", "General Assembly Resolution Adopted", Some(RSADOPT_EXT)),
+                    UIItem::new("rscomply", "All General Assembly Resolutions Adopted", None),
                 ]),
                 UIGroup::new("Changes", vec![
                     UIItem::new("chclass", "Classification Changed", Some(CHCLASS_EXT)),
@@ -75,10 +76,13 @@ impl UIParameters {
                     UIItem::new("rmqpoll", "Queued Regional Poll Deleted", None),
                     UIItem::new("addxrmb", "Embassy Posting Enabled", None),
                     UIItem::new("remxrmb", "Embassy Posting Disabled", None),
+                    UIItem::new("addrxrmb", "Region-Specific Embassy Posting Enabled", None),
+                    UIItem::new("remrxrmb", "Region-Specific Embassy Posting Disabled", None),
                     UIItem::new("rupdate", "Region Updated", None),
                     UIItem::new("rfeature", "Region Featured", None),
                     UIItem::new("rmapfeat", "Regional Map Featured", None),
                     UIItem::new("wzbanexp", "Warzone Bans Expired", None),
+                    UIItem::new("rgenkey", "Telegram API Key Generated", None),
                 ]),
                 UIGroup::new("Officers", vec![
                     UIItem::new("roadd", "Regional Officer Appointed", None),
@@ -152,6 +156,7 @@ impl UIParameters {
                     UIItem::new("rsremsub", "Proposal Withdrawn", None),
                     UIItem::new("rsquorum", "Proposal Failed Quorum", None),
                     UIItem::new("rscensus", "Quorate Proposal Missing Stats", None),
+                    UIItem::new("rsmodrem", "Proposal Removed", None),
                 ]),
                 UIGroup::new("Members", vec![
                     UIItem::new("wapply", "Nation Applied to WA", None),

@@ -285,6 +285,7 @@ function formatEventLine(event) {
         case "addxrmb": return `${nation(event.actor)} granted posting privileges on the ${region(event.origin)} Regional Message Board to ${event.data[0]} in embassy regions`;
         case "remxrmb": return `${nation(event.actor)} revoked posting privileges on the ${region(event.origin)} Regional Message Board from ${event.data[0]} in embassy regions`;
         case "wzbanexp": return `Regional bans expired in ${region(event.origin)}`;
+        case "rgenkey": return `${nation(event.actor)} generated a Telegram API key for ${region(event.origin)}`;
         case "mcreate": return `${nation(event.actor)} created ${map(event.data[0])}`;
         case "mvcreate": return `${nation(event.actor)} created ${map_version(event.data[0])}`;
         case "mupdate": return `${nation(event.actor)} updated ${map(event.data[0])} to ${map_version(event.data[1])}`;
@@ -311,6 +312,7 @@ function formatEventLine(event) {
         case "rsremsub": return `${nation(event.actor)} withdrew a proposal from the WA ${event.data[0]} titled "${event.data[1]}"`;
         case "rsquorum": return `The ${event.data[0]} proposal "${event.data[1]}" (by ${coauthors(event, 2)}) failed to achieve quorum`;
         case "rscensus": return `The General Assembly proposal "${event.data[0]}" (by ${coauthors(event, 1)}) reached quorum but could not enter the voting floor due to missing World Census analysis`;
+        case "rsmodrem": return `The proposal "${event.data[0]}" was removed from the floor`;
         case "wapply": return `${nation(event.actor)} applied to join the WA in ${region(event.origin)}`;
         case "wadmit": return `${nation(event.actor)} was admitted to the WA in ${region(event.origin)}`;
         case "wresign": return `${nation(event.actor)} resigned from the WA in ${region(event.origin)}`;
@@ -335,6 +337,8 @@ function formatEventLine(event) {
         case "rsptopic": return `${nation(event.actor)} updated a forum topic link for the WA proposal ${event.data[0]}`;
         case "rsadopt": return `${nation(event.actor)} adopted General Assembly Resolution #${event.data[0]} "${resolution(event.data[0], event.data[1], "General Assembly", event.time)}"`;
         case "rscomply": return `${nation(event.actor)} passed an omnibus bill to adopt all General Assembly resolutions`;
+        case "addrxrmb": return `${nation(event.actor)} set embassy posting for ${region(event.destination)} to ${event.data[0]} on the ${region(event.origin)} Regional Message Board`;
+        case "remrxrmb": return `${nation(event.actor)} blocked embassy posting from ${region(event.destination)} on the ${region(event.origin)} Regional Message Board`;
         case "unknown": return `Unknown happening: "${event.data[0]}"`;
         case "skipped": return `Skipped happening: "${event.data[0]}"`;
         default: return "Unknown event";
