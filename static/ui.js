@@ -10,6 +10,28 @@ function countLines(text) {
     return text.split(/\r\n|\r|\n/).filter((e) => e != "").length;
 }
 
+function updateFilterDisplay() {
+    let filters = 0;
+
+    let nationText = document.getElementById("nation-select").value;
+    if(!isEmpty(nationText)) {
+        filters += countLines(nationText);
+    }
+
+    let regionText = document.getElementById("region-select").value;
+    if(!isEmpty(regionText)) {
+        filters += countLines(regionText);
+    }
+
+    filters += getCategoryCheckboxes().filter((e) => e.checked).length;
+
+    if(filters == 0) {
+        document.getElementById("filters").innerText = `Edit Filters`;
+    } else {
+        document.getElementById("filters").innerText = `Edit Filters (${filters})`;
+    }
+}
+
 function updateNationDisplay() {
     let nationText = document.getElementById("nation-select").value;
     if(isEmpty(nationText) || countLines(nationText) == 0) {
@@ -39,28 +61,6 @@ function updateCategoryDisplay() {
     }
 }
 
-function updateFilterDisplay() {
-    let filters = 0;
-
-    let nationText = document.getElementById("nation-select").value;
-    if(!isEmpty(nationText)) {
-        filters += countLines(nationText);
-    }
-
-    let regionText = document.getElementById("region-select").value;
-    if(!isEmpty(regionText)) {
-        filters += countLines(regionText);
-    }
-
-    filters += getCategoryCheckboxes().filter((e) => e.checked).length;
-
-    if(filters == 0) {
-        document.getElementById("filters").innerText = `Edit Filters`;
-    } else {
-        document.getElementById("filters").innerText = `Edit Filters (${filters})`;
-    }
-}
-
 function updateTimeDisplay() {
     if(document.getElementById("direction-select").value == "desc") {
         document.getElementById("anchor-mode").innerText = "Only match happenings before:";
@@ -79,9 +79,9 @@ function updateLiveStatus() {
     }
 }
 
-document.getElementById("nation-select").oninput = updateNationDisplay;
-document.getElementById("region-select").oninput = updateRegionDisplay;
-getCategoryCheckboxes().forEach((c) => c.onclick = updateCategoryDisplay);
+document.getElementById("nation-select").oninput = () => { updateNationDisplay(); updateFilterDisplay(); }
+document.getElementById("region-select").oninput = () => { updateRegionDisplay(); updateFilterDisplay(); }
+getCategoryCheckboxes().forEach((c) => { c.onclick = () => { updateCategoryDisplay(); updateFilterDisplay(); } });
 
 document.getElementById("reset-time").onclick = function(e) {
     document.getElementById("anchor-time").value = "";
