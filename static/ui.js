@@ -12,7 +12,7 @@ function countLines(text) {
 
 function updateNationDisplay() {
     let nationText = document.getElementById("nation-select").value;
-    if(isEmpty(nationText)) {
+    if(isEmpty(nationText) || countLines(nationText) == 0) {
         document.getElementById("nation-tab").ariaLabel = `Nations`;
     } else {
         document.getElementById("nation-tab").ariaLabel = `Nations (${countLines(nationText)})`;
@@ -21,7 +21,7 @@ function updateNationDisplay() {
 
 function updateRegionDisplay() {
     let regionText = document.getElementById("region-select").value;
-    if(isEmpty(regionText)) {
+    if(isEmpty(regionText) || countLines(regionText) == 0) {
         document.getElementById("region-tab").ariaLabel = `Regions`;
     } else {
         document.getElementById("region-tab").ariaLabel = `Regions (${countLines(regionText)})`;
