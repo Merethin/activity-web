@@ -45,7 +45,7 @@
     </fieldset>
 
     <div class="join mt-5">
-      <button class="btn btn-secondary join-item" onclick="settings_modal.showModal()">Edit Filters</button>
+      <button class="btn btn-secondary join-item" onclick="settings_modal.showModal()" id="filters">Edit Filters</button>
       <button id="search" class="btn btn-primary join-item query-element">Search</button>
     </div>
   </div>
@@ -58,14 +58,8 @@
         <input type="radio" name="settings-tab" class="tab" id="nation-tab" aria-label="Nations" checked />
         <div class="tab-content bg-base-100 border-base-300 p-6" id="nation-content">
           <fieldset class="fieldset">
-            <label class="label">Match any happening referring to a nation</label>
-            <input id="nation-select" type="text" class="input" placeholder="Enter comma-separated list..." />
-
-            <label class="label">Match only when the nation <i>performs</i> an action, i.e. endorsing someone</label>
-            <input id="actor-select" type="text" class="input" placeholder="Enter comma-separated list..." />
-
-            <label class="label">Match only when the nation <i>receives</i> an action, i.e. getting endorsed</label>
-            <input id="receptor-select" type="text" class="input" placeholder="Enter comma-separated list..." />
+            <legend class="fieldset-legend">Nations to match</legend>
+            <input id="nation-select" type="text" class="input" placeholder="One nation per line" />
           </fieldset>
 
           <br><button class="btn btn-warning" id="reset-nation">Clear Nations</button>
@@ -74,14 +68,8 @@
         <input type="radio" name="settings-tab" class="tab" id="region-tab" aria-label="Regions" />
         <div class="tab-content bg-base-100 border-base-300 p-6" id="region-content">
           <fieldset class="fieldset">
-            <label class="label">Match any happening referring to a region</label>
-            <input id="region-select" type="text" class="input" placeholder="Enter comma-separated list..." />
-
-            <label class="label">Match only when the region is the origin of an action</label>
-            <input id="origin-select" type="text" class="input" placeholder="Enter comma-separated list..." />
-
-            <label class="label">Match only when the region receives an action (i.e. embassy request, move to region)</label>
-            <input id="destination-select" type="text" class="input" placeholder="Enter comma-separated list..." />
+            <legend class="fieldset-legend">Regions to match</legend>
+            <input id="region-select" type="text" class="input" placeholder="One region per line" />
           </fieldset>
 
           <br><button class="btn btn-warning" id="reset-region">Clear Regions</button>
@@ -106,7 +94,7 @@
       </div>
 
       <div class="modal-action">
-        <button class="btn btn-warning">Clear All Filters</button>
+        <button class="btn btn-warning" id="reset-all">Clear All Filters</button>
         <form method="dialog">
           <button class="btn btn-primary">Save</button>
         </form>

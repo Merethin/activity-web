@@ -24,38 +24,14 @@ function buildQuery(stream) {
 
     let nations = document.getElementById("nation-select").value;
     if(nations !== null && nations !== "") {
-        let entries = nations.split(", ").map((v) => canonicalizeName(v));
+        let entries = nations.split(/\r\n|\r|\n/).filter((e) => !e.isEmpty()).map((v) => canonicalizeName(v));
         filter["nations"] = {"Generic": entries};
-    }
-
-    nations = document.getElementById("actor-select").value;
-    if(nations !== null && nations !== "") {
-        let entries = nations.split(", ").map((v) => canonicalizeName(v));
-        filter["nations"] = {"Actor": entries};
-    }
-
-    nations = document.getElementById("receptor-select").value;
-    if(nations !== null && nations !== "") {
-        let entries = nations.split(", ").map((v) => canonicalizeName(v));
-        filter["nations"] = {"Receptor": entries};
     }
 
     let regions = document.getElementById("region-select").value;
     if(regions !== null && regions !== "") {
-        let entries = regions.split(", ").map((v) => canonicalizeName(v));
+        let entries = regions.split(/\r\n|\r|\n/).filter((e) => !e.isEmpty()).map((v) => canonicalizeName(v));
         filter["regions"] = {"Generic": entries};
-    }
-
-    regions = document.getElementById("origin-select").value;
-    if(regions !== null && regions !== "") {
-        let entries = regions.split(", ").map((v) => canonicalizeName(v));
-        filter["regions"] = {"Origin": entries};
-    }
-
-    regions = document.getElementById("destination-select").value;
-    if(regions !== null && regions !== "") {
-        let entries = regions.split(", ").map((v) => canonicalizeName(v));
-        filter["regions"] = {"Destination": entries};
     }
 
     let categories = new Array();

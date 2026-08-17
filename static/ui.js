@@ -6,25 +6,25 @@ function isEmpty(el) {
     return el == null || el == "";
 }
 
+function countLines(text) {
+    return text.split(/\r\n|\r|\n/).filter((e) => !e.isEmpty()).length;
+}
+
 function updateNationDisplay() {
     let nationText = document.getElementById("nation-select").value;
-    let actorText = document.getElementById("actor-select").value;
-    let receptorText = document.getElementById("receptor-select").value;
-    if(isEmpty(nationText) && isEmpty(actorText) && isEmpty(receptorText)) {
+    if(isEmpty(nationText)) {
         document.getElementById("nation-tab").ariaLabel = `Nations`;
     } else {
-        document.getElementById("nation-tab").ariaLabel = `Nations (*)`;
+        document.getElementById("nation-tab").ariaLabel = `Nations (${countLines(nationText)})`;
     }
 }
 
 function updateRegionDisplay() {
     let regionText = document.getElementById("region-select").value;
-    let originText = document.getElementById("origin-select").value;
-    let destinationText = document.getElementById("destination-select").value;
-    if(isEmpty(regionText) && isEmpty(originText) && isEmpty(destinationText)) {
+    if(isEmpty(regionText)) {
         document.getElementById("region-tab").ariaLabel = `Regions`;
     } else {
-        document.getElementById("region-tab").ariaLabel = `Regions (*)`;
+        document.getElementById("region-tab").ariaLabel = `Regions (${countLines(regionText)})`;
     }
 }
 
@@ -36,6 +36,28 @@ function updateCategoryDisplay() {
     } else {
         document.getElementById("category-count").innerText = `Categories Selected: ${categoriesSelected}`;
         document.getElementById("category-tab").ariaLabel = `Categories (${categoriesSelected})`;
+    }
+}
+
+function updateFilterDisplay() {
+    let filters = 0;
+
+    let nationText = document.getElementById("nation-select").value;
+    if(!isEmpty(nationText)) {
+        filters += countLines(nationText);
+    }
+
+    let regionText = document.getElementById("region-select").value;
+    if(!isEmpty(regionText)) {
+        filters += countLines(regionText);
+    }
+
+    filters += getCategoryCheckboxes().filter((e) => e.checked).length;
+
+    if(filters == 0) {
+        document.getElementById("filters").innerText = `Edit Filters`;
+    } else {
+        document.getElementById("filters").innerText = `Edit Filters (${filters})`;
     }
 }
 
@@ -68,21 +90,30 @@ document.getElementById("reset-time").onclick = function(e) {
 
 document.getElementById("reset-nation").onclick = function(e) {
     document.getElementById("nation-select").value = "";
-    document.getElementById("actor-select").value = "";
-    document.getElementById("receptor-select").value = "";
     updateNationDisplay();
+    updateFilterDisplay();
 };
 
 document.getElementById("reset-region").onclick = function(e) {
     document.getElementById("region-select").value = "";
-    document.getElementById("origin-select").value = "";
-    document.getElementById("destination-select").value = "";
     updateRegionDisplay();
+    updateFilterDisplay();
 };
 
 document.getElementById("reset-category").onclick = function(e) {
     getCategoryCheckboxes().forEach((e) => e.checked = false);
     updateCategoryDisplay();
+    updateFilterDisplay();
+};
+
+document.getElementById("reset-all").onclick = function(e) {
+    document.getElementById("nation-select").value = "";
+    document.getElementById("region-select").value = "";
+    getCategoryCheckboxes().forEach((e) => e.checked = false);
+    updateNationDisplay();
+    updateRegionDisplay();
+    updateCategoryDisplay();
+    updateFilterDisplay();
 };
 
 document.getElementById("direction-select").onchange = function(e) {
@@ -96,5 +127,6 @@ document.getElementById("live-toggle").onchange = function(e) {
 updateNationDisplay();
 updateRegionDisplay();
 updateCategoryDisplay();
+updateFilterDisplay();
 updateTimeDisplay();
 updateLiveStatus();
