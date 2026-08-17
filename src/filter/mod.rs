@@ -28,7 +28,51 @@ pub enum RegionFilter {
     Destination(Vec<String>),
 }
 
+const MAX_NATIONS: usize = 20;
+const MAX_REGIONS: usize = 20;
+const MAX_NORMAL_CATEGORIES: usize = 50;
+const MAX_FILTERED_CATEGORIES: usize = 10;
+const MAX_CONSTRAINTS_PER_CATEGORY: usize = 5;
+const MAX_CONSTRAINTS_TOTAL: usize = 20;
+
 impl EventFilter {
+    pub fn validate(&self) -> bool {
+        if let Some(nations) = &self.nations {
+            let length = match nations {
+                NationFilter::Generic(v) => v.len(),
+                NationFilter::Actor(v) => v.len(),
+                NationFilter::Receptor(v) => v.len()
+            };
+
+            if length > MAX_NATIONS { return false; }
+        }
+
+        if let Some(regions) = &self.regions {
+            let length = match regions {
+                RegionFilter::Generic(v) => v.len(),
+                RegionFilter::Origin(v) => v.len(),
+                RegionFilter::Destination(v) => v.len()
+            };
+
+            if length > MAX_REGIONS { return false; }
+        }
+
+        if let Some(categories) = &self.categories {
+            if categories.include.len() > MAX_NORMAL_CATEGORIES { return false; }
+            if categories.constraints.len() > MAX_FILTERED_CATEGORIES { return false; }
+
+            let mut total_constraints = 0;
+            for constraint in &categories.constraints {
+                if constraint.operations.len() > MAX_CONSTRAINTS_PER_CATEGORY { return false; }
+                total_constraints += constraint.operations.len();
+            }
+
+            if total_constraints > MAX_CONSTRAINTS_TOTAL { return false; }
+        }
+
+        true
+    }
+
     pub fn matches(
         &self,
         event: &Event

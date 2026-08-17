@@ -81,7 +81,9 @@ async function search() {
     });
 
     if(res.status != 200) {
-        alert(`Error: ${res.statusText}\nTry again in a few seconds.`);
+        if(res.status == 413) { alert(`Error: Search query too complex!\nEdit your filters and try again.`); }
+        else if(res.status == 429) { alert(`Error: Too many requests!\nTry again in a few seconds.`); }
+        else { alert(`Error: ${res.statusText} (status code: ${res.status})`); }
         document.getElementById("search").innerText = "Search";
         Array.from(document.querySelectorAll(".query-element")).forEach((e) => e.classList.remove("btn-disabled"));
         return;
@@ -161,7 +163,9 @@ async function load() {
     });
 
     if(res.status != 200) {
-        alert(`Error: ${res.statusText}\nTry again in a few seconds.`);
+        if(res.status == 413) { alert(`Error: Search query too complex!\nEdit your filters and try again.`); }
+        else if(res.status == 429) { alert(`Error: Too many requests!\nTry again in a few seconds.`); }
+        else { alert(`Error: ${res.statusText} (status code: ${res.status})`); }
         document.getElementById("load-more").innerText = "Load more...";
         Array.from(document.querySelectorAll(".query-element")).forEach((e) => e.classList.remove("btn-disabled"));
         return;

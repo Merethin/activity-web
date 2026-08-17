@@ -16,11 +16,15 @@ pub async fn create_stream(
     State(state): State<AppState>,
     Form(params): Form<StreamQuery>,
 ) -> Result<Sse<impl Stream<Item = Result<SseEvent, Infallible>>>, (StatusCode, String)> {
-    let mut rx = state.inner.broadcast.subscribe();
-
     let Some(filter): Option<EventFilter> = serde_json::from_str(&params.filter).ok() else {
         return Err((StatusCode::BAD_REQUEST, "Invalid parameters".into()));
     };
+
+    if !filter.validate() {
+        return Err((StatusCode::PAYLOAD_TOO_LARGE, "Search query too complex".into()));
+    }
+
+    let mut rx = state.inner.broadcast.subscribe();
 
     Ok(Sse::new(try_stream! {
         yield SseEvent::default().comment("connected");

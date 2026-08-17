@@ -4,14 +4,14 @@ use sqlx::{Postgres, QueryBuilder};
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct CategoryFilter {
-    include: Vec<String>,
-    constraints: Vec<CategoryConstraint>,
+    pub include: Vec<String>,
+    pub constraints: Vec<CategoryConstraint>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct CategoryConstraint {
-    category: String,
-    operations: Vec<ConstraintOp>,
+    pub category: String,
+    pub operations: Vec<ConstraintOp>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
