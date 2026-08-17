@@ -7,7 +7,7 @@ function isEmpty(el) {
 }
 
 function countLines(text) {
-    return text.split(/\r\n|\r|\n/).filter((e) => !e.isEmpty()).length;
+    return text.split(/\r\n|\r|\n/).filter((e) => e != "").length;
 }
 
 function updateNationDisplay() {
