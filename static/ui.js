@@ -79,8 +79,8 @@ function updateLiveStatus() {
     }
 }
 
-Array.from(document.getElementById("nation-content").querySelectorAll("textarea")).forEach((c) => c.oninput = updateNationDisplay);
-Array.from(document.getElementById("region-content").querySelectorAll("textarea")).forEach((c) => c.oninput = updateRegionDisplay);
+document.getElementById("nation-select").oninput = updateNationDisplay;
+document.getElementById("region-select").oninput = updateRegionDisplay;
 getCategoryCheckboxes().forEach((c) => c.onclick = updateCategoryDisplay);
 
 document.getElementById("reset-time").onclick = function(e) {
