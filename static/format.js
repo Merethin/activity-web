@@ -2,6 +2,10 @@ const LOWERCASE_WORDS = new Set([
   "a", "an", "the", "and", "but", "or", "for", "nor", "on", "at", "to", "in", "of"
 ]);
 
+function escapeData(value) {
+    return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+}
+
 function prettifyName(name) {
     return name.replace(/_/g, " ").split(" ")
         .map(word => {
@@ -28,7 +32,7 @@ function rmbpost(id) {
 }
 
 function dispatch(id, name) {
-    return `<a href="https://www.nationstates.net/page=dispatch/id=${id}" class="link-accent">${name}</a>`;
+    return `<a href="https://www.nationstates.net/page=dispatch/id=${id}" class="link-accent">${escapeData(name)}</a>`;
 }
 
 function map(id) {
@@ -45,7 +49,7 @@ function resolution(id, name, chamber, time) {
     let council = 3;
     if (time < GA2026_CUTOFF) council = 1;
     if(chamber === "Security Council") { council = 2; }
-    return `<a href="https://www.nationstates.net/page=WA_past_resolution/id=${id}/council=${council}" class="link-accent">${name}</a>`;
+    return `<a href="https://www.nationstates.net/page=WA_past_resolution/id=${id}/council=${council}" class="link-accent">${escapeData(name)}</a>`;
 }
 
 function coauthors(event, start) {
@@ -95,15 +99,15 @@ function authority(line) {
 }
 
 function chfield(event) {
-    if(event.data.length == 2) { return `${nation(event.actor)} changed its national ${event.data[0]} to "${event.data[1]}"`; }
+    if(event.data.length == 2) { return `${nation(event.actor)} changed its national ${event.data[0]} to "${escapeData(event.data[1])}"`; }
 
     let i = 2;
-    let result = `${nation(event.actor)} changed its national ${event.data[0]} to "${event.data[1]}"`;
+    let result = `${nation(event.actor)} changed its national ${event.data[0]} to "${escapeData(event.data[1])}"`;
     while(i < (event.data.length - 2)) {
-        result += `, its ${event.data[i]} to "${event.data[i + 1]}"`;
+        result += `, its ${event.data[i]} to "${escapeData(event.data[i + 1])}"`;
         i += 2;
     }
-    result += ` and its ${event.data[i]} to "${event.data[i + 1]}"`;
+    result += ` and its ${event.data[i]} to "${escapeData(event.data[i + 1])}"`;
 
     return result;
 }
@@ -160,9 +164,9 @@ function rochange(event) {
         let word = "from"
         if(event.data[1].startsWith("+")) { word = "to"; }
 
-        return `${nation(event.actor)} ${authority(event.data[1])} authority ${word} ${nation(event.receptor)} as ${event.data[0]} in ${region(event.origin)}`;
+        return `${nation(event.actor)} ${authority(event.data[1])} authority ${word} ${nation(event.receptor)} as ${escapeData(event.data[0])} in ${region(event.origin)}`;
     } else {
-        return `${nation(event.actor)} ${authority(event.data[1])} and ${authority(event.data[2])} authority from ${nation(event.receptor)} as ${event.data[0]} in ${region(event.origin)}`;
+        return `${nation(event.actor)} ${authority(event.data[1])} and ${authority(event.data[2])} authority from ${nation(event.receptor)} as ${escapeData(event.data[0])} in ${region(event.origin)}`;
     }
 }
 
@@ -171,9 +175,9 @@ function rochname(event) {
         let word = "from"
         if(event.data[2].startsWith("+")) { word = "to"; }
 
-        return `${nation(event.actor)} ${authority(event.data[2])} authority ${word} ${nation(event.receptor)} and renamed the office from "${event.data[0]}" to "${event.data[1]}" in ${region(event.origin)}`;
+        return `${nation(event.actor)} ${authority(event.data[2])} authority ${word} ${nation(event.receptor)} and renamed the office from "${escapeData(event.data[0])}" to "${escapeData(event.data[1])}" in ${region(event.origin)}`;
     } else {
-        return `${nation(event.actor)} ${authority(event.data[2])} and ${authority(event.data[3])} authority from ${nation(event.receptor)} and renamed the office from "${event.data[0]}" to "${event.data[1]}" in ${region(event.origin)}`;
+        return `${nation(event.actor)} ${authority(event.data[2])} and ${authority(event.data[3])} authority from ${nation(event.receptor)} and renamed the office from "${escapeData(event.data[0])}" to "${escapeData(event.data[1])}" in ${region(event.origin)}`;
     }
 }
 
@@ -195,15 +199,15 @@ function rdelauth(event) {
 
 function rssubmit(event) {
     if(event.data[1].length != 0) {
-        return `${nation(event.actor)} submitted a proposal to the ${event.data[0]} ${event.data[1]} Board entitled "${event.data[2]}"`;
+        return `${nation(event.actor)} submitted a proposal to the ${event.data[0]} ${event.data[1]} Board entitled "${escapeData(event.data[2])}"`;
     } else {
-        return `${nation(event.actor)} submitted a proposal to the ${event.data[0]} entitled "${event.data[2]}"`;
+        return `${nation(event.actor)} submitted a proposal to the ${event.data[0]} entitled "${escapeData(event.data[2])}"`;
     }
 }
 
 function formatEventLine(event) {
     switch(event.category) {
-        case "law": return `Following new legislation in ${nation(event.actor)}, ${event.data[0]}`;
+        case "law": return `Following new legislation in ${nation(event.actor)}, ${escapeData(event.data[0])}`;
         case "chclass": return `${nation(event.receptor)} was reclassified from "${event.data[0]}" to "${event.data[1]}"`;
         case "chcensus": return chcensus(event);
         case "chfield": return chfield(event);
@@ -248,14 +252,14 @@ function formatEventLine(event) {
         case "rmqpoll": return `${nation(event.actor)} deleted a queued regional poll in ${region(event.origin)}`;
         case "addtag": return `${nation(event.actor)} added the tag "${event.data[0]}" to ${region(event.origin)}`;
         case "rmtag": return `${nation(event.actor)} removed the tag "${event.data[0]}" from ${region(event.origin)}`;
-        case "roadd": return `${nation(event.actor)} appointed ${nation(event.receptor)} as ${event.data[0]} with authority over ${authority(event.data[1])} in ${region(event.origin)}`;
-        case "rorename": return `${nation(event.actor)} renamed the office held by ${nation(event.receptor)} from "${event.data[0]}" to "${event.data[1]}" in ${region(event.origin)}`;
+        case "roadd": return `${nation(event.actor)} appointed ${nation(event.receptor)} as ${escapeData(event.data[0])} with authority over ${authority(event.data[1])} in ${region(event.origin)}`;
+        case "rorename": return `${nation(event.actor)} renamed the office held by ${nation(event.receptor)} from "${escapeData(event.data[0])}" to "${escapeData(event.data[1])}" in ${region(event.origin)}`;
         case "rochange": return rochange(event);
         case "rochname": return rochname(event);
-        case "roremove": return `${nation(event.actor)} dismissed ${nation(event.receptor)} as ${event.data[0]} of ${region(event.origin)}`;
-        case "roresign": return `${nation(event.actor)} resigned as ${event.data[0]} of ${region(event.origin)}`;
-        case "rgovtset": return `${nation(event.actor)} named the Governor's office <span class="font-bold">${event.data[0]}</span> in ${region(event.origin)}`;
-        case "rgovtupd": return `${nation(event.actor)} renamed the Governor's office from "${event.data[0]}" to <span class="font-bold">${event.data[1]}</span> in ${region(event.origin)}`;
+        case "roremove": return `${nation(event.actor)} dismissed ${nation(event.receptor)} as ${escapeData(event.data[0])} of ${region(event.origin)}`;
+        case "roresign": return `${nation(event.actor)} resigned as ${escapeData(event.data[0])} of ${region(event.origin)}`;
+        case "rgovtset": return `${nation(event.actor)} named the Governor's office <span class="font-bold">${escapeData(event.data[0])}</span> in ${region(event.origin)}`;
+        case "rgovtupd": return `${nation(event.actor)} renamed the Governor's office from "${escapeData(event.data[0])}" to <span class="font-bold">${escapeData(event.data[1])}</span> in ${region(event.origin)}`;
         case "rdelauth": return rdelauth(event);
         case "rnewgov": return `${nation(event.receptor)} succeeded ${nation(event.actor)} as Governor of ${region(event.origin)}`;
         case "rsucprio": return `${nation(event.actor)} increased ${nation(event.receptor)}'s succession priority in ${region(event.origin)}`;
@@ -299,20 +303,20 @@ function formatEventLine(event) {
         case "ncte": return `${nation(event.receptor)} ceased to exist in ${region(event.origin)}`;
         case "rgcte": return `Governor ${nation(event.receptor)} of ${region(event.origin)} ceased to exist`;
         case "rfcte": return `Founder ${nation(event.receptor)} of ${region(event.origin)} ceased to exist`;
-        case "wavote": return `${nation(event.actor)} voted ${event.data[0]} the World Assembly resolution "${event.data[1]}"`;
-        case "wrvote": return `${nation(event.actor)} withdrew its vote on the World Assembly resolution "${event.data[0]}"`;
-        case "rsfloor": return `The ${event.data[0]} proposal "${event.data[1]}" (by ${coauthors(event, 2)}) entered the resolution voting floor`;
+        case "wavote": return `${nation(event.actor)} voted ${event.data[0]} the World Assembly resolution "${escapeData(event.data[1])}"`;
+        case "wrvote": return `${nation(event.actor)} withdrew its vote on the World Assembly resolution "${escapeData(event.data[0])}"`;
+        case "rsfloor": return `The ${event.data[0]} proposal "${escapeData(event.data[1])}" (by ${coauthors(event, 2)}) entered the resolution voting floor`;
         case "rspass": return `The ${event.data[0]} resolution ${resolution(event.data[1], event.data[2], event.data[0], event.time)} was passed ${event.data[3]} votes to ${event.data[4]}`;
         case "nrspass": return `${nation(event.receptor)}'s resolution ${resolution(event.data[1], event.data[2], event.data[0], event.time)} was passed by the ${event.data[0]}`;
-        case "rsfail": return `The ${event.data[0]} resolution <span class="font-bold">${event.data[1]}</span> was defeated ${event.data[2]} votes to ${event.data[3]}`;
-        case "rdiscard": return `The ${event.data[0]} resolution <span class="font-bold">${event.data[1]}</span> was discarded by the WA for rule violations after garnering ${event.data[2]} votes in favor and ${event.data[3]} votes against`;
-        case "rsapp": return `${nation(event.actor)} approved the World Assembly proposal "${event.data[0]}"`;
-        case "rsremapp": return `${nation(event.actor)} withdrew its approval for the World Assembly proposal "${event.data[0]}"`;
+        case "rsfail": return `The ${event.data[0]} resolution <span class="font-bold">${escapeData(event.data[1])}</span> was defeated ${event.data[2]} votes to ${event.data[3]}`;
+        case "rdiscard": return `The ${event.data[0]} resolution <span class="font-bold">${escapeData(event.data[1])}</span> was discarded by the WA for rule violations after garnering ${event.data[2]} votes in favor and ${event.data[3]} votes against`;
+        case "rsapp": return `${nation(event.actor)} approved the World Assembly proposal "${escapeData(event.data[0])}"`;
+        case "rsremapp": return `${nation(event.actor)} withdrew its approval for the World Assembly proposal "${escapeData(event.data[0])}"`;
         case "rssubmit": return rssubmit(event);
-        case "rsremsub": return `${nation(event.actor)} withdrew a proposal from the WA ${event.data[0]} titled "${event.data[1]}"`;
-        case "rsquorum": return `The ${event.data[0]} proposal "${event.data[1]}" (by ${coauthors(event, 2)}) failed to achieve quorum`;
-        case "rscensus": return `The General Assembly proposal "${event.data[0]}" (by ${coauthors(event, 1)}) reached quorum but could not enter the voting floor due to missing World Census analysis`;
-        case "rsmodrem": return `The proposal "${event.data[0]}" was removed from the floor`;
+        case "rsremsub": return `${nation(event.actor)} withdrew a proposal from the WA ${event.data[0]} titled "${escapeData(event.data[1])}"`;
+        case "rsquorum": return `The ${event.data[0]} proposal "${escapeData(event.data[1])}" (by ${coauthors(event, 2)}) failed to achieve quorum`;
+        case "rscensus": return `The General Assembly proposal "${escapeData(event.data[0])}" (by ${coauthors(event, 1)}) reached quorum but could not enter the voting floor due to missing World Census analysis`;
+        case "rsmodrem": return `The proposal "${escapeData(event.data[0])}" was removed from the floor`;
         case "wapply": return `${nation(event.actor)} applied to join the WA in ${region(event.origin)}`;
         case "wadmit": return `${nation(event.actor)} was admitted to the WA in ${region(event.origin)}`;
         case "wresign": return `${nation(event.actor)} resigned from the WA in ${region(event.origin)}`;
@@ -324,8 +328,8 @@ function formatEventLine(event) {
         case "secrvote": return `${nation(event.actor)} removed its vote in round ${event.data[0]} of the WASec election`;
         case "secelect": return `${nation(event.receptor)} was elected to the World Assembly Secretariat`;
         case "govabd": return `Governor ${nation(event.actor)} of ${region(event.origin)} abdicated`;
-        case "npoll": return `${nation(event.actor)} created a new poll in ${region(event.origin)}: "${event.data[0]}"`;
-        case "nqpoll": return `${nation(event.actor)} queued a new poll in ${region(event.origin)}: "${event.data[0]}"`;
+        case "npoll": return `${nation(event.actor)} created a new poll in ${region(event.origin)}: "${escapeData(event.data[0])}"`;
+        case "nqpoll": return `${nation(event.actor)} queued a new poll in ${region(event.origin)}: "${escapeData(event.data[0])}"`;
         case "modkick": return `${nation(event.receptor)} was removed from ${region(event.origin)} by moderation`;
         case "nscnom": return `${nation(event.receptor)} was nominated for a World Assembly ${event.data[0]} by ${nation(event.actor)}`;
         case "rscnom": return `${region(event.origin)} was nominated for a World Assembly ${event.data[0]} by ${nation(event.actor)}`;
@@ -334,13 +338,13 @@ function formatEventLine(event) {
         case "rscpass": return `${region(event.origin)} was ${event.data[0]} by ${resolution(event.data[1], `Security Council Resolution #${event.data[1]}`, "Security Council", 0)}`;
         case "rscrep": return `${event.data[0]} ${region(event.origin)} was repealed`;
         case "rsvtopic": return `${nation(event.actor)} updated a forum topic link for the at-vote WA resolution in council ${event.data[0]}`;
-        case "rsptopic": return `${nation(event.actor)} updated a forum topic link for the WA proposal ${event.data[0]}`;
+        case "rsptopic": return `${nation(event.actor)} updated a forum topic link for the WA proposal ${escapeData(event.data[0])}`;
         case "rsadopt": return `${nation(event.actor)} adopted General Assembly Resolution #${event.data[0]} "${resolution(event.data[0], event.data[1], "General Assembly", event.time)}"`;
         case "rscomply": return `${nation(event.actor)} passed an omnibus bill to adopt all General Assembly resolutions`;
         case "addrxrmb": return `${nation(event.actor)} set embassy posting for ${region(event.destination)} to ${event.data[0]} on the ${region(event.origin)} Regional Message Board`;
         case "remrxrmb": return `${nation(event.actor)} blocked embassy posting from ${region(event.destination)} on the ${region(event.origin)} Regional Message Board`;
-        case "unknown": return `Unknown happening: "${event.data[0]}"`;
-        case "skipped": return `Skipped happening: "${event.data[0]}"`;
+        case "unknown": return `Unknown happening: "${escapeData(event.data[0])}"`;
+        case "skipped": return `Skipped happening: "${escapeData(event.data[0])}"`;
         default: return "Unknown event";
     };
 }
