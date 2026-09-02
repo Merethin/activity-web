@@ -210,13 +210,13 @@ function rssubmit(event) {
 }
 
 function rscomply(event) {
-    if(event.data.length == 0) {
-        return `${nation(event.actor)} passed an omnibus bill to adopt all General Assembly resolutions`;
-    } else {
-        let count = event.data[1];
+    if(event.data) {
+        let count = event.data[0];
         let plural = "resolutions";
         if (count == "1") { plural = "resolution"; }
         return `${nation(event.actor)} passed an omnibus bill to adopt ${count} General Assembly ${plural}`;
+    } else {
+        return `${nation(event.actor)} passed an omnibus bill to adopt all General Assembly resolutions`;
     }
 }
 
