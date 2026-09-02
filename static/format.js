@@ -43,6 +43,10 @@ function map_version(id) {
     return `<a href="https://www.nationstates.net/page=map_version/mvid=${id}" class="link-accent">a map version</a>`;
 }
 
+function tranche(name, id) {
+    return `<a href="https://www.nationstates.net/page=tranche/trancheid=${id}" class="link-accent">${escapeData(name)}</a>`;
+}
+
 const GA2026_CUTOFF = 1782975600;
 
 function resolution(id, name, chamber, time) {
@@ -205,6 +209,17 @@ function rssubmit(event) {
     }
 }
 
+function rscomply(event) {
+    if(event.data.length == 0) {
+        return `${nation(event.actor)} passed an omnibus bill to adopt all General Assembly resolutions`;
+    } else {
+        let count = event.data[1];
+        let plural = "resolutions";
+        if (count == "1") { plural = "resolution"; }
+        return `${nation(event.actor)} passed an omnibus bill to adopt ${count} General Assembly ${plural}`;
+    }
+}
+
 function formatEventLine(event) {
     switch(event.category) {
         case "law": return `Following new legislation in ${nation(event.actor)}, ${escapeData(event.data[0])}`;
@@ -340,9 +355,11 @@ function formatEventLine(event) {
         case "rsvtopic": return `${nation(event.actor)} updated a forum topic link for the at-vote WA resolution in council ${event.data[0]}`;
         case "rsptopic": return `${nation(event.actor)} updated a forum topic link for the WA proposal ${escapeData(event.data[0])}`;
         case "rsadopt": return `${nation(event.actor)} adopted General Assembly Resolution #${event.data[0]} "${resolution(event.data[0], event.data[1], "General Assembly", event.time)}"`;
-        case "rscomply": return `${nation(event.actor)} passed an omnibus bill to adopt all General Assembly resolutions`;
+        case "rscomply": return rscomply(event);
         case "addrxrmb": return `${nation(event.actor)} set embassy posting for ${region(event.destination)} to ${event.data[0]} on the ${region(event.origin)} Regional Message Board`;
         case "remrxrmb": return `${nation(event.actor)} blocked embassy posting from ${region(event.destination)} on the ${region(event.origin)} Regional Message Board`;
+        case "defrxrmb": return `${nation(event.actor)} reset embassy posting for ${region(event.destination)} to global default in ${region(event.origin)}`;
+        case "trcreate": return `${nation(event.actor)} created the tranche ${tranche(event.data[1], event.data[2])}`;
         case "unknown": return `Unknown happening: "${escapeData(event.data[0])}"`;
         case "skipped": return `Skipped happening: "${escapeData(event.data[0])}"`;
         default: return "Unknown event";
