@@ -359,7 +359,7 @@ function formatEventLine(event) {
         case "addrxrmb": return `${nation(event.actor)} set embassy posting for ${region(event.destination)} to ${event.data[0]} on the ${region(event.origin)} Regional Message Board`;
         case "remrxrmb": return `${nation(event.actor)} blocked embassy posting from ${region(event.destination)} on the ${region(event.origin)} Regional Message Board`;
         case "defrxrmb": return `${nation(event.actor)} reset embassy posting for ${region(event.destination)} to global default in ${region(event.origin)}`;
-        case "trcreate": return `${nation(event.actor)} created the tranche ${tranche(event.data[1], event.data[2])}`;
+        case "trcreate": return `${nation(event.actor)} created the tranche ${tranche(event.data[0], event.data[1])}`;
         case "unknown": return `Unknown happening: "${escapeData(event.data[0])}"`;
         case "skipped": return `Skipped happening: "${escapeData(event.data[0])}"`;
         default: return "Unknown event";
