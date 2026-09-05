@@ -1,3 +1,7 @@
+function getCategoryCheckboxes() {
+    return Array.from(document.getElementById("category-content").querySelectorAll("input[type=checkbox]"));
+}
+
 function buildQuery(stream) {
     let params = {};
 
@@ -57,6 +61,66 @@ function buildQuery(stream) {
     return params;
 }
 
+function saveQuery(stream, query) {
+    if(!stream) {
+        var encoded = btoa("s:" + JSON.stringify(query));
+    } else {
+        var encoded = btoa("l:" + JSON.stringify(query["filter"]));
+    }
+
+    document.location.hash = encoded;
+}
+
+function loadQuery() {
+    let hash = document.location.hash;
+    if(hash == "") return;
+
+    let decoded = atob(hash.substring(1));
+    let split = decoded.indexOf(":");
+    let type = decoded.slice(0, split);
+    var query = JSON.parse(decoded.slice(split+1));
+    if(type == "s") {
+        document.getElementById("live-toggle").checked = false;
+        let pagination = query["pagination"];
+        if(pagination) {
+            if(pagination["direction"] == "Ascending") document.getElementById("direction-select").value == "asc";
+            else document.getElementById("direction-select").value == "desc";
+
+            if(pagination["anchor"] && pagination["anchor"]["Time"]) {
+                document.getElementById("anchor-time").value == pagination["anchor"]["Time"];
+            }
+        }
+
+        var query = query["filter"];
+    } else {
+        document.getElementById("live-toggle").checked = true;
+    }
+
+    if(query["nations"] && Array.isArray(query["nations"]["Generic"])) {
+        document.getElementById("nation-select").value = query["nations"]["Generic"].join("\n");
+    }
+
+    if(query["regions"] && Array.isArray(query["regions"]["Generic"])) {
+        document.getElementById("region-select").value = query["regions"]["Generic"].join("\n");
+    }
+
+    if(query["categories"] && Array.isArray(query["categories"]["include"]) && Array.isArray(query["categories"]["constraints"])) {
+        let include = query["categories"]["include"];
+        let constraints = Object.fromEntries(query["categories"]["constraints"].map((v) => [v.category, v.operations]));
+        let keys = Object.keys(constraints);
+
+        getCategoryCheckboxes().forEach((c) => {
+            let event = c.dataset.event;
+            if(include.includes(event)) {
+                c.checked = true;
+            } else if (keys.includes(event)) {
+                c.checked = true;
+                // fixme: handle re-adding custom fields
+            }
+        })
+    }
+}
+
 let after = null;
 let results = new Array();
 let evtSource = null;
@@ -64,6 +128,7 @@ let query = null;
 
 async function search() {
     const params = buildQuery(false);
+    saveQuery(false, params);
     after = null;
     results = new Array();
     query = params;
@@ -114,6 +179,7 @@ async function search() {
 
 async function live() {
     const params = buildQuery(true);
+    saveQuery(true, params);
     after = null;
     results = new Array();
     query = params;
@@ -212,3 +278,9 @@ document.getElementById("search").onclick = () => {
 
 document.getElementById("load-more").onclick = load;
 document.getElementById("export").onclick = export_data;
+
+try {
+    loadQuery();
+} catch (e) {
+    console.log(`error while loading query from hash string: ${e}`);
+}

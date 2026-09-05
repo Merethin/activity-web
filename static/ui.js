@@ -1,7 +1,3 @@
-function getCategoryCheckboxes() {
-    return Array.from(document.getElementById("category-content").querySelectorAll("input[type=checkbox]"));
-}
-
 function isEmpty(el) {
     return el == null || el == "";
 }
