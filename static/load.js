@@ -88,7 +88,7 @@ function saveQuery(stream, query) {
 
     if(filter["categories"] && Array.isArray(filter["categories"]["constraints"])) {
         for(var entry of filter["categories"]["constraints"]) {
-            segments.push(`e:${entry.category}@${JSON.stringify(entry.constraints)}`);
+            segments.push(`e:${entry.category}@${JSON.stringify(entry.operations)}`);
         }
     }
 
@@ -113,7 +113,7 @@ function loadQuery() {
         }
 
         if(segment == "a") {
-            document.getElementById("direction-select").value == "asc";
+            document.getElementById("direction-select").value = "asc";
             continue;
         }
 
