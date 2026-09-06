@@ -62,13 +62,41 @@ function buildQuery(stream) {
 }
 
 function saveQuery(stream, query) {
+    let segments = new Array();
+
     if(!stream) {
-        var encoded = btoa("s:" + JSON.stringify(query));
+        let pagination = query["pagination"];
+        if (pagination["direction"] == "Ascending") segments.push("a");
+        if (pagination["anchor"]) segments.push(`t:${pagination["anchor"]["Time"]}`);
     } else {
-        var encoded = btoa("l:" + JSON.stringify(query["filter"]));
+        segments.push("l");
     }
 
-    document.location.hash = encoded;
+    let filter = query["filter"];
+
+    if(filter["nations"] && Array.isArray(filter["nations"]["Generic"])) {
+        segments.push(`n:${filter["nations"]["Generic"].join(",")}`);
+    }
+
+    if(filter["regions"] && Array.isArray(filter["regions"]["Generic"])) {
+        segments.push(`r:${filter["regions"]["Generic"].join(",")}`);
+    }
+
+    if(filter["categories"] && Array.isArray(filter["categories"]["include"])) {
+        segments.push(`c:${filter["categories"]["include"].join(",")}`);
+    }
+
+    if(filter["categories"] && Array.isArray(filter["categories"]["constraints"])) {
+        for(var entry of filter["categories"]["constraints"]) {
+            segments.push(`e:${entry.category}@${JSON.stringify(entry.constraints)}`);
+        }
+    }
+
+    if(segments.length > 0) {
+        document.location.hash = btoa(segments.join("/"));
+    } else {
+        document.location.hash = "";
+    }
 }
 
 function loadQuery() {
@@ -76,48 +104,55 @@ function loadQuery() {
     if(hash == "") return;
 
     let decoded = atob(hash.substring(1));
-    let split = decoded.indexOf(":");
-    let type = decoded.slice(0, split);
-    var query = JSON.parse(decoded.slice(split+1));
-    if(type == "s") {
-        document.getElementById("live-toggle").checked = false;
-        let pagination = query["pagination"];
-        if(pagination) {
-            if(pagination["direction"] == "Ascending") document.getElementById("direction-select").value == "asc";
-            else document.getElementById("direction-select").value == "desc";
+    let segments = decoded.split("/");
 
-            if(pagination["anchor"] && pagination["anchor"]["Time"]) {
-                document.getElementById("anchor-time").value == pagination["anchor"]["Time"];
-            }
+    for(var segment of segments) {
+        if(segment == "l") {
+            document.getElementById("live-toggle").checked = true;
+            continue;
         }
 
-        var query = query["filter"];
-    } else {
-        document.getElementById("live-toggle").checked = true;
-    }
+        if(segment == "a") {
+            document.getElementById("direction-select").value == "asc";
+            continue;
+        }
 
-    if(query["nations"] && Array.isArray(query["nations"]["Generic"])) {
-        document.getElementById("nation-select").value = query["nations"]["Generic"].join("\n");
-    }
+        let split = segment.indexOf(":");
+        if(split == -1) continue;
 
-    if(query["regions"] && Array.isArray(query["regions"]["Generic"])) {
-        document.getElementById("region-select").value = query["regions"]["Generic"].join("\n");
-    }
+        let type = segment.slice(0, split);
+        let content = segment.slice(split+1);
 
-    if(query["categories"] && Array.isArray(query["categories"]["include"]) && Array.isArray(query["categories"]["constraints"])) {
-        let include = query["categories"]["include"];
-        let constraints = Object.fromEntries(query["categories"]["constraints"].map((v) => [v.category, v.operations]));
-        let keys = Object.keys(constraints);
+        const pad = (t, c) => {
+            return t.toString().padStart(c, "0");
+        };
 
-        getCategoryCheckboxes().forEach((c) => {
-            let event = c.dataset.event;
-            if(include.includes(event)) {
-                c.checked = true;
-            } else if (keys.includes(event)) {
-                c.checked = true;
-                // fixme: handle re-adding custom fields
-            }
-        })
+        switch(type) {
+            case "t":
+                let date = new Date(parseInt(content) * 1000);
+                let formatted = `${pad(date.getFullYear(), 4)}-${pad(date.getMonth() + 1, 2)}-${pad(date.getDate(), 2)}T${pad(date.getHours(), 2)}:${pad(date.getMinutes(), 2)}`;
+                document.getElementById("anchor-time").value = formatted;
+                break;
+            case "n":
+                document.getElementById("nation-select").value = content.replace(/,/g, "\n");
+                break;
+            case "r":
+                document.getElementById("region-select").value = content.replace(/,/g, "\n");
+                break;
+            case "c":
+                let categories = content.split(",");
+                getCategoryCheckboxes().forEach((c) => { if(categories.includes(c.dataset.event)) c.checked = true; });
+                break;
+            case "e":
+                let split = content.indexOf("@");
+                if(split == -1) break;
+
+                let category = content.slice(0, split);
+                // let extension = content.slice(split+1); fixme: restore extension values
+                let element = document.querySelector(`[data-event="${category}"]`);
+                if(element) element.checked = true;
+                break;
+        }
     }
 }
 
