@@ -342,8 +342,8 @@ function formatEventLine(event) {
         case "secvote": return `${nation(event.actor)} voted for ${nation(event.receptor)} in round ${event.data[0]} of the WASec election`;
         case "secrvote": return `${nation(event.actor)} removed its vote in round ${event.data[0]} of the WASec election`;
         case "secelect": return `${nation(event.receptor)} was elected to the World Assembly Secretariat`;
-        case "zhorde": return `${nation(event.receptor)} was ravaged by a Zombie ${event.data[0]} Horder from ${nation(event.actor)}, infecting ${event.data[1]} million survivors`;
-        case "zconvert": return `${nation(event.receptor)} was ravaged by a Zombie ${event.data[0]} Horder from ${nation(event.actor)}, infecting ${event.data[1]} million survivors and converting to a zombie exporter`;
+        case "zhorde": return `${nation(event.receptor)} was ravaged by a Zombie ${event.data[0]} Horde from ${nation(event.actor)}, infecting ${event.data[1]} million survivors`;
+        case "zconvert": return `${nation(event.receptor)} was ravaged by a Zombie ${event.data[0]} Horde from ${nation(event.actor)}, infecting ${event.data[1]} million survivors and converting to a zombie exporter`;
         case "zclean": return `${nation(event.receptor)} was cleansed by a Level ${event.data[0]} ${event.data[1]} Tactical Zombie Elimination Squad from ${nation(event.actor)}, killing ${event.data[2]} million zombies`;
         case "zcleanrs": return `${nation(event.receptor)} was cleansed by a Level ${event.data[0]} ${event.data[1]} Tactical Zombie Elimination Squad from ${nation(event.actor)}, killing ${event.data[2]} million zombies and restoring to ${event.data[3]}`;
         case "zcure": return `${nation(event.receptor)} was struck by a Mk ${event.data[0]} ${event.data[1]} Cure Missile from ${nation(event.actor)}, curing ${event.data[2]} million infected`;
