@@ -175,6 +175,16 @@ impl UIParameters {
                     UIItem::new("secrvote", "Nation Removed Vote in WASec Election", None),
                     UIItem::new("secelect", "Nation Elected to Secretariat", None),
                 ]),
+                UIGroup::new("Zombies", vec![
+                    UIItem::new("zhorde", "Nation Ravaged by Zombie Horde", None),
+                    UIItem::new("zconvert", "Nation Ravaged by Zombie Horde, converting to Exporter", None),
+                    UIItem::new("zclean", "Nation Cleansed by TZES", None),
+                    UIItem::new("zcleanrs", "Nation Cleansed by TZES, restoring focus", None),
+                    UIItem::new("zcure", "Nation Struck by Cure Missile", None),
+                    UIItem::new("zcurers", "Nation Struck by Cure Missile, restoring focus", None),
+                    UIItem::new("zsetpw", "Zombie Border Control Activated", None),
+                    UIItem::new("zrmpw", "Zombie Border Control Removed", None),
+                ]),
                 UIGroup::new("Other", vec![
                     UIItem::new("modkick", "Nation Removed from Region by Moderation", None),
                     UIItem::new("nrspass", "Nation's WA Resolution Passed", None),
