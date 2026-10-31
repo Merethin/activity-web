@@ -349,7 +349,7 @@ function formatEventLine(event) {
         case "zcure": return `${nation(event.receptor)} was struck by a Mk ${event.data[0]} ${event.data[1]} Cure Missile from ${nation(event.actor)}, curing ${event.data[2]} million infected`;
         case "zcurers": return `${nation(event.receptor)} was struck by a Mk ${event.data[0]} ${event.data[1]} Cure Missile from ${nation(event.actor)}, curing ${event.data[2]} million infected and restoring to ${event.data[3]}`;
         case "zsetpw": return `${nation(event.actor)} instituted ${event.data[0]} Zombie Border Control in ${region(event.origin)}`;
-        case "zrmpw": return `${nation(event.actor)}removed Zombie Border Control in ${region(event.origin)}`;
+        case "zrmpw": return `${nation(event.actor)} removed Zombie Border Control in ${region(event.origin)}`;
         case "govabd": return `Governor ${nation(event.actor)} of ${region(event.origin)} abdicated`;
         case "npoll": return `${nation(event.actor)} created a new poll in ${region(event.origin)}: "${escapeData(event.data[0])}"`;
         case "nqpoll": return `${nation(event.actor)} queued a new poll in ${region(event.origin)}: "${escapeData(event.data[0])}"`;
